@@ -1,57 +1,61 @@
+import { MongoClient, ObjectId } from "mongodb"
 
 import MeetUpDetail from "../../components/meetups/meetupDetail"
 
 
-function MeetUpDetails(){
+function MeetUpDetails(props){
     return (
     <MeetUpDetail
    
-        image= "https://upload.wikimedia.org/wikipedia/commons/d/d3/Stadtbild_M%C3%BCnchen.jpg"
-        title="First Meetup"
-        address="Some Street 5, Some city"
-        description="this is a first meetup"
+        image= {props.meetUpData.image}
+        title={props.meetUpData.title}
+        address={props.meetUpData.address}
+        description={props.meetUpData.description}
  />
     )
 }
 
 export async function getStaticPaths() {
+    const client =  MongoClient.connect("mongodb+srv://<username>:<password>@cluster0.rfre0.mongodb.net/?")
+    const db = client.db();
+
+    const meetupsCollection = db.collection("meetups");
+
+    const selectedMeetup = meetupsCollection.findOne({})
+
+
     return {
         fallback: false,
-        paths: [
-            { params: {
-                meetupId: "m1",
-            },
-        },     
-            { params: {
-                meetupId: "m2",
-            },
-        },
-        ],
+        paths: meetups.map((meetup) => ({params: {meetupId: meetup._id.toString()}, } )), 
     }
 }
 
-export async function getStaticProps(context) {
-//fetch data for a single meetup
 
 
 
-const meetupId =    context.params.meetupId;
+const db = client.db()
 
 
-console.log(meetupId);
+const meetupsCollection = db.collection("meetups")
+
+const selectedMeetup = await meetupsCollection.findOne({_id: meetupId(meetupId),
+})    
+
+
+client.close()
 
 
 return {
     props:{
-        MeetUpData: {
-            image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Stadtbild_M%C3%BCnchen.jpg",
-            id: "m1",
-            title: "First meetup",
-            address: "some street 5, some city",
-            description: "this is a first meetup",
-        }
-    }
-}
-}
+        MeetUpData:{
+            id:selectedMeetup._id.toString(),
+            title: selectedMeetup.title,
+            address: selectedMeetup.address,
+            image: selectedMeetup.image,
+            description: selectedMeetup.description,
+        }, 
+    },
+};
+
 
 export default MeetUpDetails
