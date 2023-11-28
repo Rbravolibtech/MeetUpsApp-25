@@ -12,4 +12,4 @@ function NewMeetUpPage() {
     return <NewMeetUpForm onAddMeetup={addMeetupHandler}/>
 }
  
-export default NewMeetUp
+export default NewMeetUpPage
