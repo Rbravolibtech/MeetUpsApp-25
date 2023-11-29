@@ -1,18 +1,24 @@
 import { MongoClient, ObjectId } from "mongodb"
-
+import { Fragment } from "react";
+import Head from "next/head"
 import MeetUpDetail from "../../components/meetups/meetupDetail"
 
 
 function MeetUpDetails(props){
     return (
-    <MeetUpDetail
-   
-        image= {props.meetUpData.image}
-        title={props.meetUpData.title}
-        address={props.meetUpData.address}
-        description={props.meetUpData.description}
- />
-    )
+        <Fragment>
+          <Head>
+            <title>{props.meetUpData.title}</title>
+            <meta name="description" content={props.meetUpData.description}/>
+            </Head>  
+          <MeetUpDetail
+              image= {props.meetUpData.image}
+              title={props.meetUpData.title}
+              address={props.meetUpData.address}
+              description={props.meetUpData.description}
+       />
+        </Fragment>
+          )
 }
 
 export async function getStaticPaths() {
